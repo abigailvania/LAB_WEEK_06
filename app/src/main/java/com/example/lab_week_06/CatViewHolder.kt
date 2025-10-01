@@ -7,12 +7,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.lab_week_06.model.CatBreed
 import com.example.lab_week_06.model.CatModel
 import com.example.lab_week_06.model.Gender
+import android.content.DialogInterface.OnClickListener
 
 private val FEMALE_SYMBOL = "\u2640"
 private val MALE_SYMBOL = "\u2642"
 private const val UNKNOWN_SYMBOL = "?"
 
-class CatViewHolder (containerView: View, private val imageLoader: ImageLoader) : RecyclerView.ViewHolder(containerView) {
+class CatViewHolder(private val containerView: View, private val imageLoader: ImageLoader, private val onClickListener: OnClickListener) : RecyclerView.ViewHolder(containerView) {
     private val catBiographyView: TextView by lazy {
         containerView.findViewById(R.id.cat_biography)
     }
@@ -34,6 +35,10 @@ class CatViewHolder (containerView: View, private val imageLoader: ImageLoader) 
     }
 
     fun bindData (cat: CatModel) {
+        containerView.setOnClickListener {
+            onClickListener.onClick(cat)
+        }
+
         imageLoader.loadImage(cat.imageUrl, catPhotoView)
         catNameView.text = cat.name
         catBreedView.text = when (cat.breed) {
@@ -48,5 +53,9 @@ class CatViewHolder (containerView: View, private val imageLoader: ImageLoader) 
             Gender.Male -> MALE_SYMBOL
             else -> UNKNOWN_SYMBOL
         }
+    }
+
+    interface OnClickListener {
+        fun onClick(cat: CatModel)
     }
 }
